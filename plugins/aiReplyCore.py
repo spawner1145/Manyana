@@ -8,8 +8,8 @@ import copy
 import yaml
 
 from plugins.ReplyModels import gptOfficial, gptUnofficial, kimi, qingyan,alcexGpt4o,lingyi, stepAI, qwen, gptvvvv, grop, \
-    gpt4hahaha, anotherGPT35, chatGLM, relolimigpt2, xinghuo, Gemma, binggpt4, alcex_GPT3_5, freeGemini, catRep, \
-    momoRep, sparkAI, wenxinAI, YuanQiTencent
+    gpt4hahaha, anotherGPT35, chatGLM, relolimigpt2, xinghuo, Gemma, binggpt4, alcex_GPT3_5, freeGemini, free_phi_3_5, \
+    free_gemini, sparkAI, wenxinAI, YuanQiTencent,meta_llama
 from plugins.googleGemini import geminirep
 from plugins.toolkits import newLogger,random_str,translate
 logger=newLogger()
@@ -60,7 +60,7 @@ trustDays = friendsAndGroups.get("trustDays")
 glmReply = result.get("chatGLM").get("glmReply")
 modelDefault = result.get("chatGLM").get("model")
 privateGlmReply = result.get("chatGLM").get("privateGlmReply")
-randomModelPriority = result.get("chatGLM").get("randomModel&&&&Priority")
+randomModelPriority = result.get("chatGLM").get("randomModel&&&&&Priority")
 autoClearWhenError=result.get("chatGLM").get("AutoClearWhenError")
 replyModel = result.get("chatGLM").get("model")
 trustglmReply = result.get("chatGLM").get("trustglmReply")
@@ -166,11 +166,11 @@ async def modelReply(senderName, senderId, text, modelHere=modelDefault, trustUs
             #    tasks.append(loop_run_in_executor(loop, gpt4hahaha, prompt1, bot_in))        # 2024-07-17测试无效
             #    tasks.append(loop_run_in_executor(loop, anotherGPT35, prompt1, senderId))    # 2024-07-17测试 初始化失败
             #    tasks.append(loop_run_in_executor(loop, xinghuo, prompt1, senderId))         # 2024-07-17测试无效
-            tasks.append(loop_run_in_executor(loop, Gemma, prompt1, bot_in))  # 2024-07-17测试通过
-            tasks.append(loop_run_in_executor(loop, alcex_GPT3_5, prompt1, bot_in))  # 2024-07-17测试通过
-            tasks.append(loop_run_in_executor(loop, catRep, prompt1, bot_in))
-            tasks.append(loop_run_in_executor(loop, momoRep, prompt1, bot_in))
-            tasks.append(loop_run_in_executor(loop,alcexGpt4o,prompt1,bot_in))
+            #tasks.append(loop_run_in_executor(loop, Gemma, prompt1, bot_in))         # 2024-07-17测试通过
+            tasks.append(loop_run_in_executor(loop, meta_llama, prompt1, bot_in))  # 2024-07-17测试通过
+            tasks.append(loop_run_in_executor(loop, free_phi_3_5, prompt1, bot_in))
+            tasks.append(loop_run_in_executor(loop, free_gemini, prompt1, bot_in))  #2024-12-29测试通过
+            #tasks.append(loop_run_in_executor(loop,alcexGpt4o,prompt1,bot_in))
             #    tasks.append(loop_run_in_executor(loop,freeGemini,prompt1,bot_in))           # 2024-07-17测试无效
 
             # tasks.append(loop_run_in_executor(loop,localAurona,prompt1,bot_in))
@@ -191,15 +191,7 @@ async def modelReply(senderName, senderId, text, modelHere=modelDefault, trustUs
                 if result is not None:
                     if "content" not in result:
                         continue
-                    if "无法解析" in result.get("content") or "账户余额不足" in result.get(
-                            "content") or "令牌额度" in result.get(
-                        "content") or "敏感词汇" in result.get("content") or "request id" in result.get(
-                        "content") or "This model's maximum" in result.get(
-                        "content") or "solve CAPTCHA to" in result.get("content") or "输出错误请联系站长" in result.get(
-                        "content") or "接口失败" in result.get("content") or "psot格式请求" in result.get(
-                        "content") or "第三方响应错误" in result.get(
-                        "content") or "access the URL on this server" in result.get(
-                        "content") or "正常人完全够用" in result.get("content") or "请到我们的官方群" in result.get("content"):
+                    if "无法解析" in result.get("content") or "reached your free usage limit" in result.get("content"):
                         continue
                     reps[task.result()[0]] = task.result()[1]
                     # reps.append(task.result())  # 添加可用结果
