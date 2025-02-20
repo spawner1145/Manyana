@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
-import os
-import random
-import yaml
 import asyncio
 import datetime
 import json
+import os
+import random
 import re
+
+import yaml
 from mirai.models import ForwardMessageNode, Forward
-from plugins.extraParts import get_game_image,sort_yaml,manage_group_status
+
+from plugins.extraParts import get_game_image, sort_yaml, manage_group_status
+
 _task = None
-from mirai import Mirai, WebSocketAdapter, GroupMessage, Image, At, Startup, Shutdown,MessageChain
+from mirai import GroupMessage, Image, Startup, Shutdown,MessageChain
 import requests
 
 
@@ -93,12 +96,12 @@ def main(bot, logger):
 
     @bot.on(GroupMessage)#透群友合集
     async def wife_you_want(event: GroupMessage):
-        if (f'{wifePrefix}' in str(event.message_chain)):#前置触发词
+        if f'{wifePrefix}' in str(event.message_chain):#前置触发词
             target_id_aim = None
         #if '/' in str(event.message_chain):#前置触发词
             flag_persona = 0
             flag_aim = 0
-            if ('透群主' in str(event.message_chain)):
+            if '透群主' in str(event.message_chain):
                 flag_persona=1
                 check='OWNER'
                 target_group = int(event.group.id)
@@ -110,14 +113,14 @@ def main(bot, logger):
                 else:
                     flag_aim = 0
                 pass
-            elif ('透管理' in str(event.message_chain)):
+            elif '透管理' in str(event.message_chain):
                 flag_persona = 2
                 check = 'ADMINISTRATOR'
                 pass
-            elif ('透群友' in str(event.message_chain)):
+            elif '透群友' in str(event.message_chain):
                 flag_persona = 3
                 pass
-            elif ('娶群友' in str(event.message_chain)):
+            elif '娶群友' in str(event.message_chain):
                 flag_persona = 4
                 from_id = int(event.sender.id)
                 if manage_group_status(from_id) :
@@ -127,7 +130,7 @@ def main(bot, logger):
                 else:
                     flag_aim = 0
                 pass
-            elif ('离婚' in str(event.message_chain)):
+            elif '离婚' in str(event.message_chain):
                 from_id = int(event.sender.id)
                 if manage_group_status(from_id):
                     manage_group_status(from_id,False)
@@ -202,7 +205,7 @@ def main(bot, logger):
                                 data_test = data['data'][i]['id']
                         elif flag_persona == 3 or flag_persona == 4:
                             data_test = data['data'][i]['id']
-                        if data_test != None:
+                        if data_test is not None:
                             friendlist.append(data_test)
                         if flag_persona == 1:
                             if data_check == 'OWNER':
@@ -394,7 +397,7 @@ def main(bot, logger):
     @bot.on(Shutdown)
     async def stop_scheduler(_):
         # 退出时停止定时任务
-        if _task and not task.done():
+        if _task and not _task.done():
             _task.cancel()
 
 

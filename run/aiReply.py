@@ -2,31 +2,28 @@
 import asyncio
 import datetime
 import os
-import re
 import random
+import re
 import shutil
 import threading
 from asyncio import sleep
 
 import yaml
-from mirai import FriendMessage, GroupMessage, At,Image
+from mirai import At
+from mirai import FriendMessage, GroupMessage, Image
 from mirai import Voice, Startup
 from mirai.models import NudgeEvent
-from mirai import At
 
-from plugins.aiReplyCore import modelReply, clearAllPrompts,clearsinglePrompt
+from plugins.aiReplyCore import modelReply, clearAllPrompts, clearsinglePrompt
 from plugins.toolkits import random_str
 from plugins.vitsGenerate import superVG
 from plugins.wReply.wontRep import wontrep
-from plugins.wReply.wReplyOpeator import addRep, loadAllDict, getRep, compare2messagechain
-
-from plugins.wReply.MessageConvert import EventMessageConvert
 
 
 # 1
 class CListen(threading.Thread):
     def __init__(self, loop):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.mLoop = loop
 
     def run(self):
@@ -227,17 +224,12 @@ def main(bot, master, logger):
             pass
         else:
             return
-        text = str(event.message_chain)
-        imgurl = None
 
         text = str(event.message_chain)  # 初始text
         imgurl = None
         if event.message_chain.count(Image):
             lst_img = event.message_chain.get(Image)
-            imgurl = []
-            for i in lst_img:
-                url = i.url
-                imgurl.append(url)
+            imgurl = [i.url for i in lst_img]
         
         if event.sender.id in chatGLMCharacters:
             print(type(chatGLMCharacters.get(event.sender.id)), chatGLMCharacters.get(event.sender.id))
@@ -430,7 +422,7 @@ def main(bot, master, logger):
         else:
             if str(event.message_chain).startswith(result.get("chatGLM").get("prefix")):
                 text=str(event.message_chain).replace(result.get("chatGLM").get("prefix"), '')
-            elif result.get("chatGLM").get("随机触发对话") == True and random.random() < float(result.get("chatGLM").get("随机触发几率")):
+            elif result.get("chatGLM").get("随机触发对话") and random.random() < float(result.get("chatGLM").get("随机触发几率")):
                 text=str(event.message_chain)
             else:
                 return

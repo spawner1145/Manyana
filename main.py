@@ -1,20 +1,18 @@
 # -*- coding:utf-8 -*-
-from itertools import repeat
-from time import sleep
-
 import asyncio
 import datetime
-import websockets
-from websockets.exceptions import ConnectionClosedOK, ConnectionClosed
-from websockets import connect
-
+import json
 import os
 import random
 import shutil
 import sys
-import json
+from asyncio import sleep as sleep1
+from itertools import repeat
+from time import sleep
 
-from asyncio import sleep as sleep1, exceptions
+import websockets
+from websockets import connect
+from websockets.exceptions import ConnectionClosedOK
 
 # 下面的两行是launcher启动必要设置，勿动。
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -339,7 +337,7 @@ if __name__ == '__main__':
                             for i in s:
                                 await bot.send(event, i)
                             await bot.send(event,
-                                           '这是' + botName + '的功能列表\nヾ(≧▽≦*)o\n发送 pet 以查看制图功能列表\npetpet功能由https://github.com/Dituon/petpet提供')
+                                           f'这是{botName}的功能列表\nヾ(≧▽≦*)o\n发送 pet 以查看制图功能列表\npetpet功能由https://github.com/Dituon/petpet提供')
                         await bot.send(event, "提示：如指令未明确指出需要@，就不要带@", True)
 
 

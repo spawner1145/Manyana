@@ -1,19 +1,15 @@
+import asyncio
 import base64
-import os
-import random
+import logging
 import platform
+import random
 import re
-import json
 
+import colorlog
+import httpx
 import psutil
 import requests
 import yaml
-import logging
-import httpx
-import colorlog
-from io import BytesIO
-from PIL import Image
-import asyncio
 
 try:
     with open('config/api.yaml', 'r', encoding='utf-8') as f:
@@ -51,7 +47,7 @@ def get_headers():
 def fileToUrl(file_path,proxy):
     url = "https://file.io"
     files = {"file": open(file_path, "rb")}
-    if proxy=="" or proxy==" " or proxy==None:
+    if proxy=="" or proxy==" " or proxy is None:
         response = requests.post(url, files=files,headers=get_headers())
     else:
         proxies = {
@@ -265,7 +261,7 @@ async def webScreenShot(url, path):
 async def picDwn(url, path,proxies=None):
     if url.startswith("data:image"):
         return save_data_image(url, path)
-    if proxies!=None:
+    if proxies is not None:
         proxies = {
             "http://": proxies,
             "https://": proxies,

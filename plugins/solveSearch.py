@@ -1,11 +1,8 @@
-import re
-import httpx
-import asyncio
-import time
-import datetime
-from PIL import Image
 import io
-from mirai import logger
+import re
+
+import httpx
+from PIL import Image
 
 '''
 steam查询相关功能
@@ -82,7 +79,7 @@ async def solve(keyword,proxy=None):
         path = f"data/pictures/cache/{search_result['name']}.png"
         image.save(path)
         description = await get_steam_game_description(search_result["app_id"],proxy)
-        if(description == 'none'):
+        if description == 'none':
             description = await fetch_description(keyword)
         result_dict = {
             "name": search_result['name'],

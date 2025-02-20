@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import base64
+import copy
 import io
 
-from PIL import Image
-import asyncio
-import copy
-
-import google.generativeai as genai
 import httpx
+from PIL import Image
+
 
 #官方sdk的prompt和使用post请求的prompt结构不同，需要进行转换
 def promptConvert(input_list):
@@ -59,7 +57,6 @@ safety_settings = [
 
 
 async def GeminiDownloadAllImagesAndSetPrompts(imgurls, rev=False):
-    imgresults = []
     for i in imgurls:
         retry_count = 0
         success = False
@@ -83,7 +80,7 @@ async def GeminiDownloadAllImagesAndSetPrompts(imgurls, rev=False):
 
 
                     img_base64 = base64.b64encode(img_byte_arr.getvalue()).decode('utf-8')
-                    imgresults.append({"inline_data": {"mime_type": "image/jpeg", "data": img_base64}})
+                    yield {"inline_data": {"mime_type": "image/jpeg", "data": img_base64}}
 
 
                     success = True  # Mark as successful if no exception occurs
@@ -93,7 +90,7 @@ async def GeminiDownloadAllImagesAndSetPrompts(imgurls, rev=False):
                 if retry_count == 3:
                     pass
                     #print(f"Failed to download and process image from {i} after 3 attempts")
-    return imgresults
+
 async def geminirep(ak, messages, bot_info, GeminiRevProxy="",model="gemini-1.5-flash",imgurls=None,proxy=None):
     messages_copy = copy.deepcopy(messages)
 
@@ -102,14 +99,14 @@ async def geminirep(ak, messages, bot_info, GeminiRevProxy="",model="gemini-1.5-
     #messages_copy.insert(1, {"role": 'model', "parts": ["好的，我会根据以上设定扮演好对应角色，无论发生什么，我都会坚守我的设定。"]})
     # 假设convert_content_to_parts_and_role是一个自定义函数，确保它不会修改外部状态
     messages_copy = convert_content_to_parts_and_role(messages_copy)
-    if imgurls!=None:
+    if imgurls is not None:
         if GeminiRevProxy==" " or GeminiRevProxy=="":
             rev=False
         else:
             rev=True
         imgPromptResults=await GeminiDownloadAllImagesAndSetPrompts(imgurls,rev)
     messages_copy = promptConvert(messages_copy)
-    if imgurls != None:
+    if imgurls is not None:
         for vb in imgPromptResults:
             messages_copy[-1]['parts'].append(vb)
     if GeminiRevProxy == "" or GeminiRevProxy == " ":

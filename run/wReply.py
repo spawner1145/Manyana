@@ -1,23 +1,18 @@
 # -*- coding: utf-8 -*-
-import os
-from typing import Dict
-
 import asyncio
 import datetime
 import json
+import os
 import random
-
 from asyncio import sleep
 
 import yaml
-from fuzzywuzzy import process
-from mirai import FriendMessage, GroupMessage, At, Plain,MessageChain,Startup
-from mirai import Image, Voice
+from mirai import GroupMessage, Plain, MessageChain, Startup
+from mirai import Image
 from mirai.models import ForwardMessageNode, Forward
-from plugins.wReply.wReplyOpeator import addRep, loadAllDict, getRep, compare2messagechain
 
 from plugins.wReply.MessageConvert import EventMessageConvert
-
+from plugins.wReply.wReplyOpeator import addRep, loadAllDict, getRep, compare2messagechain
 
 
 async def mesChainConstructer(source):
@@ -97,7 +92,7 @@ def main(bot,logger):
                     r = await getRep(publicDict.get(operateProcess[event.sender.id]["operateId"]),event.message_chain.json(),wReply.get("threshold"),wReply.get("mode"),wReply.get("inMaxLength"),wReply.get("inWeighting"))
                     #if str(event.message_chain) in publicDict.get(operateProcess[event.sender.id]["operateId"]):
                         #operateProcess[event.sender.id]["value"]=publicDict.get(operateProcess[event.sender.id]["operateId"]).get(str(event.message_chain))
-                    if r!=None:
+                    if r is not None:
                         operateProcess[event.sender.id]["value"] = r[1]
                         logger.info("已存在关键词")
                 await bot.send(event,"请发送回复，发送 over 以退出添加")
@@ -150,7 +145,7 @@ def main(bot,logger):
             if operateProcess[event.sender.id]["status"]=="query":
                 r = await getRep(publicDict.get(operateProcess[event.sender.id]["operateId"]), str(event.message_chain.json()),wReply.get("threshold"),wReply.get("mode"),wReply.get("inMaxLength"),wReply.get("inWeighting"))
                 b1=[]
-                if r != None:
+                if r is not None:
                     index=0
                     for i in r[1]:
                         mesc = await mesChainConstructer(i)
@@ -203,7 +198,7 @@ def main(bot,logger):
             r=await getRep(publicDict.get(str(event.group.id)),str(event.message_chain.json()),wReply.get("threshold"),wReply.get("mode"),wReply.get("inMaxLength"),wReply.get("inWeighting"))
         else:
             r = await getRep(publicDict.get("publicLexicon"), str(event.message_chain.json()),wReply.get("threshold"),wReply.get("mode"),wReply.get("inMaxLength"),wReply.get("inWeighting"))
-        if r != None:
+        if r is not None:
             logger.info(f"词库匹配成功")
             if random.randint(0, 100) < wReply.get("colorfulCharacter"):
                 logger.info("本次使用彩色小人替代匹配回复")

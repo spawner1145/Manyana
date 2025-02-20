@@ -2,11 +2,13 @@
 import datetime
 import re
 from asyncio import sleep
-from mirai.models import ForwardMessageNode, Forward
-from mirai import Image, Voice, Startup, MessageChain
+
 from mirai import GroupMessage
-from plugins.toolkits import screenshot_to_pdf_and_png
+from mirai import Image, MessageChain
+from mirai.models import ForwardMessageNode, Forward
+
 from plugins.bangumisearch import bangumisearch, banguimiList
+from plugins.toolkits import screenshot_to_pdf_and_png
 
 
 def main(bot,logger):
@@ -91,7 +93,7 @@ def main(bot,logger):
             #url = "https://api.bgm.tv/calendar"
             url = "https://bgm.tv/calendar"
             path = "data/pictures/cache/week-"
-        elif str(event.message_chain)==("bangumi热门"):
+        elif str(event.message_chain)== "bangumi热门":
             url = "https://www.bangumi.app/hot/anime"
             path = "data/pictures/cache/hot-"
         else:

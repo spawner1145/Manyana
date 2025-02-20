@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-import copy
 import os.path
 import shutil
 
@@ -7,7 +6,7 @@ import jmcomic
 import yaml
 from jmcomic import *
 
-from plugins.toolkits import fileToUrl, lanzouFileToUrl,random_str
+from plugins.toolkits import fileToUrl, lanzouFileToUrl, random_str
 
 
 class MyDownloader(jmcomic.JmDownloader):
@@ -20,19 +19,19 @@ class MyDownloader(jmcomic.JmDownloader):
         end = self.end
         if detail.is_album() and self.onlyFirstPhoto:
             album: jmcomic.JmAlbumDetail = detail
-            if(len(album)<self.album_index):
+            if len(album)<self.album_index:
                 self.album_index = len(album)-1
-            if(self.album_index<1):
+            if self.album_index<1:
                 self.album_index = 1
             return [album[self.album_index-1]]
-        if(detail.is_photo()):
+        if detail.is_photo():
             photo: jmcomic.JmPhotoDetail = detail
             print(len(photo))
-            if(end>len(photo)):
+            if end>len(photo):
                 end = len(photo)
-            if(start>len(photo)):
+            if start>len(photo):
                 start = len(photo)
-            if(start == end):
+            if start == end:
                 start = 0
                 end = len(photo)
             return photo[start:end]
@@ -89,7 +88,6 @@ def JM_search_comic_id():
     op = JmOption.default()
     cl = op.new_jm_client()
     page: JmCategoryPage = cl.week_ranking(1)
-    result=[]
     for page in cl.categories_filter_gen(page=1, # 起始页码
                                          # 下面是分类参数
                                          time=JmMagicConstants.TIME_MONTH,
@@ -97,9 +95,8 @@ def JM_search_comic_id():
                                          order_by=JmMagicConstants.ORDER_BY_VIEW,
                                          ):
         for aid, atitle in page:
-            result.append(aid)
+            yield aid
         #print(result)
-    return result
     
 def downloadComic(comic_id,start=1,end=5):
     with open("config/jmcomic.yml", 'r', encoding='utf-8') as f: #不知道他这个options咋传的，我就修改配置文件得了。

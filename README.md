@@ -18,11 +18,12 @@
 
 ---
 
+**本仓库将基本不再更新。如果您有意愿参与开发和维护，欢迎pr。<br>
+目前开发的重心在[Eridanus](https://github.com/avilliai/Eridanus)。Eridanus旨在实现对Manyana的全面替代，功能更多，占用更低，功能之间的联动性更强。**
+
 [阅读文档](https://doc.luxmix.top/)
 
-> 因本人学业繁忙，未来几个月本仓库将以维护为主要工作。如果您有意愿参与开发和维护，欢迎pr。
-> 未来恢复更新后，开发的重心将转向[Eridanus](https://github.com/avilliai/Eridanus)
-> 
+
 > ❗️源码矢山警告⚠，本仓库一开始是我为了学习py而创建的，因此代码内容及项目规划有许多不够明智和成熟的地方，加上并没有很好地管理来自其他开发者的pr，源码杂乱无章，未来有时间会进行整体重构，现在……先凑合着吧
 # 大前提: 部署一个onebot实现
 项目的结构是onebot实现+overflow+Manyana，所以你需要一个onebot实现才能进行接下来的内容。<br>

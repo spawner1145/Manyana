@@ -10,9 +10,6 @@ from io import BytesIO
 import httpx
 import requests
 import yaml
-import asyncio
-import datetime
-from mirai import Startup, Shutdown
 from PIL import Image as Image1
 from mirai import GroupMessage, At, Plain
 from mirai import Image, Voice, Startup, MessageChain
@@ -20,18 +17,18 @@ from mirai.models import ForwardMessageNode, Forward
 from mirai.models import MusicShare
 
 from plugins import weatherQuery
-from plugins.toolkits import random_str, picDwn
 from plugins.aiReplyCore import modelReply
 from plugins.emojimixhandle import emojimix_handle
 from plugins.extraParts import get_cp_mesg, arkOperator, minecraftSeverQuery, eganylist
-from plugins.gacha import arkGacha, starRailGacha, bbbgacha
 from plugins.extraParts import hisToday, steamEpic, search_and_download_image
+from plugins.gacha import arkGacha, starRailGacha, bbbgacha
 from plugins.jokeMaker import get_joke
-from plugins.newsEveryDay import news, moyu, xingzuo, sd, chaijun, danxianglii, beCrazy,bingEveryDay
+from plugins.newsEveryDay import news, moyu, xingzuo, sd, chaijun, danxianglii, beCrazy, bingEveryDay
 from plugins.picGet import pic, setuGet
 from plugins.setuModerate import setuModerate
 from plugins.solveSearch import solve
 from plugins.tarot import tarotChoice, genshinDraw, qianCao
+from plugins.toolkits import random_str, picDwn
 
 _task = None
 
@@ -52,9 +49,9 @@ def main(bot, logger):
 
     logger.info("额外的功能 启动完成")
     with open("data/text/odes.json", encoding="utf-8") as fp:
-        odes = json.loads(fp.read())
+        odes = json.load(fp)
     with open("data/text/IChing.json", encoding="utf-8") as fp:
-        IChing = json.loads(fp.read())
+        IChing = json.load(fp)
     global data
     with open('data/text/nasaTasks.yaml', 'r', encoding='utf-8') as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
@@ -777,12 +774,12 @@ def main(bot, logger):
 
     @bot.on(GroupMessage)
     async def searchGame(event: GroupMessage):
-        if (str(event.message_chain).startswith("steam查询")):
+        if str(event.message_chain).startswith("steam查询"):
             keyword = str(event.message_chain).replace("steam查询", "")
             try:
                 logger.info(f"查询游戏{keyword}")
                 result_dict = await solve(keyword)
-                if (result_dict is None):
+                if result_dict is None:
                     await bot.send(event, "没有找到哦，试试其他名字~")
                     return
                 logger.info(result_dict)

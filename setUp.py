@@ -1,12 +1,11 @@
 # -*- coding:utf-8 -*-
 import logging
 import os
+import shutil
 import subprocess
-import sys
 
 import colorlog
 
-import shutil
 current_dir = os.getcwd()
 
 
@@ -112,7 +111,7 @@ def main():
         print("chatLearning： https://mirai.mamoe.net/topic/1018/chatlearning-%E8%AE%A9bot%E5%AD%A6%E4%BC%9A%E4%BD%A0%E7%9A%84%E7%BE%A4%E8%81%8A/8")
         if os.path.exists("config.clc"):
             with open("config.clc", "r", encoding="utf_8_sig") as ass:
-                p = json.loads(ass.read())
+                p = json.load(ass)
         else:
             p = {
                 "unmergegrouplist": [],
@@ -167,10 +166,8 @@ def main():
                 "replylength": 100,
                 "atreply": 1
             }
-        file1 = open('data/music/groups.txt', 'r')
-        js1 = file1.read()
-        js1 = json.loads(js1)
-        file1.close()
+        with open('data/music/groups.txt', 'r') as file1:
+            js1 = json.load(file1)
         da = js1.keys()
         print(list(da), type(list(da)))
         p["replygrouplist"] = list(da)
@@ -203,7 +200,7 @@ def main():
     else:
         print("结束")
 def updaat(f=False,jump=False,source=None):
-    if jump==False:
+    if not jump:
         logger.warning("是否补全依赖？如已使用最新整合包请输入1以跳过。(更新的新功能可能需要执行此步骤)。可以按1跳过，如果更新后启动报错/提示功能无法启用，请回来执行这一步")
         if input("在这里输入:") != "1":
             logger.warning("即将开始更新依赖库，请确保已关闭代理，否则无法安装依赖库")
@@ -216,7 +213,7 @@ def updaat(f=False,jump=False,source=None):
             os.system(f"\"{python_path}\" -m pip install --upgrade pytubefix")
             os.system(f"\"{python_path}\" -m pip install --upgrade PicImageSearch")
             os.system(f"\"{python_path}\" -m pip install httpx==0.27.2")
-    if source==None:
+    if source is None:
         logger.info("拉取bot代码\n--------------------")
         logger.info("选择更新源(git源 镜像源相互兼容)：\n1 git源\n2 git代理源1\n3 git代理源2 \n4 国内源(没事别几把用这个)")
         source = input("选择更新源(输入数字 )：")
@@ -249,7 +246,7 @@ def updaat(f=False,jump=False,source=None):
 
     # 存放冲突文件名的列表
     conflict_files = []
-    if f==True:
+    if f:
         if os.path.exists("./temp"):
             if len(os.listdir("./config")) != 14:
                 logger.error("文件数目异常，请参考远程仓库config文件夹https://github.com/avilliai/Manyana/tree/main/config补全缺失文件。")
@@ -299,7 +296,7 @@ def updaat(f=False,jump=False,source=None):
         if file.endswith(".py"):
             os.remove(file)
             try:
-                shutil.os.remove(file)
+                os.remove(file)
             except:
                 pass
             logger.warning("移除了" + file)
@@ -313,7 +310,7 @@ def updaat(f=False,jump=False,source=None):
                     shutil.copyfile(file, file.replace("config/", "temp/").replace("data/","temp/"))
                     os.remove(file)
                     try:
-                        shutil.os.remove(file)
+                        os.remove(file)
                     except:
                         pass
                 except:
@@ -323,13 +320,13 @@ def updaat(f=False,jump=False,source=None):
                 shutil.copyfile(file, file.replace("config", "temp").replace("data","temp"))
                 os.remove(file)
                 try:
-                    shutil.os.remove(file)
+                    os.remove(file)
                 except:
                     pass
         else:
             os.remove(file)
             try:
-                shutil.os.remove(file)
+                os.remove(file)
             except:
                 pass
             logger.warning("移除了 " + file)
